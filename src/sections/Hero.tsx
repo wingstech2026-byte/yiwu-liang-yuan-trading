@@ -1,0 +1,33 @@
+import Image from "next/image";
+import { ButtonLink } from "@/components/ui/Button";
+import { getDictionary } from "@/content";
+import { localePath, type Locale } from "@/lib/site";
+
+export function Hero({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale);
+  const h = t.home.hero;
+  return (
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-bg">
+        <Image src="/images/copper-cathode-2.jpg" alt={h.imageAlt} fill priority sizes="100vw" />
+      </div>
+      <span className="hero-shape hero-shape--a" aria-hidden="true" />
+      <span className="hero-shape hero-shape--b" aria-hidden="true" />
+      <div className="container hero-grid">
+        <div className="hero-copy">
+          <span className="eyebrow">{h.eyebrow}</span>
+          <h1 id="hero-title">{h.title}</h1>
+          <span className="hero-rule" aria-hidden="true" />
+          <p className="lead">{h.text}</p>
+          <div className="btn-row">
+            <ButtonLink href={localePath(locale, "/products")}>{t.common.exploreProducts}</ButtonLink>
+            <ButtonLink href={localePath(locale, "/contact")} variant="outline-light">
+              {t.common.sendInquiry}
+            </ButtonLink>
+          </div>
+        </div>
+      </div>
+      <span className="scroll-cue" aria-hidden="true" title={h.scroll} />
+    </section>
+  );
+}
