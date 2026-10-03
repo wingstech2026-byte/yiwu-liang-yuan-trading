@@ -48,6 +48,9 @@ export const en = {
     illustrative: "Illustrative image",
     video: "Video",
     playVideo: "Play video",
+    pauseVideo: "Pause video",
+    muteVideo: "Mute video",
+    unmuteVideo: "Unmute video",
     legalRep: "Legal Representative",
   },
 

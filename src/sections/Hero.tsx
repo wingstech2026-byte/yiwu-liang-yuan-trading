@@ -13,12 +13,12 @@ export function Hero({ locale }: { locale: Locale }) {
   const h = t.home.hero;
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-bg">
-        <Image src="/images/copper-cathode-2.jpg" alt={h.imageAlt} fill priority sizes="100vw" />
-      </div>
-      <span className="hero-shape hero-shape--a" aria-hidden="true" />
-      <span className="hero-shape hero-shape--b" aria-hidden="true" />
-      <div className="container hero-grid">
+      <div className="hero-panel">
+        <div className="hero-bg">
+          <Image src="/images/copper-cathode-2.jpg" alt={h.imageAlt} fill priority sizes="(min-width: 960px) 50vw, 100vw" />
+        </div>
+        <span className="hero-shape hero-shape--a" aria-hidden="true" />
+        <span className="hero-shape hero-shape--b" aria-hidden="true" />
         <div className="hero-copy">
           <span className="eyebrow">{h.eyebrow}</span>
           <h1 id="hero-title">{h.title}</h1>
@@ -31,9 +31,16 @@ export function Hero({ locale }: { locale: Locale }) {
             </ButtonLink>
           </div>
         </div>
-        {heroVideo && <HeroVideo src={heroVideo.src} poster={heroVideo.poster} label={heroVideo.label} playLabel={t.common.playVideo} />}
+        <span className="scroll-cue" aria-hidden="true" title={h.scroll} />
       </div>
-      <span className="scroll-cue" aria-hidden="true" title={h.scroll} />
+      {heroVideo && (
+        <HeroVideo
+          src={heroVideo.src}
+          poster={heroVideo.poster}
+          label={heroVideo.label}
+          labels={{ pause: t.common.pauseVideo, play: t.common.playVideo, mute: t.common.muteVideo, unmute: t.common.unmuteVideo }}
+        />
+      )}
     </section>
   );
 }
