@@ -12,6 +12,7 @@ export interface ProductCardLabels {
   moqUnknown: string;
   placeholderNotice: string;
   illustrative: string;
+  video: string;
 }
 
 export function PlaceholderTile({ category }: { category: string }) {
@@ -39,6 +40,11 @@ export function ProductCard({ product, locale, labels }: { product: Product; loc
         )}
         {product.status === "placeholder" && <span className="badge badge--warn">{labels.placeholderNotice}</span>}
         {product.illustrative && product.status !== "placeholder" && <span className="badge badge--warn">{labels.illustrative}</span>}
+        {product.videos && product.videos.length > 0 && (
+          <span className="badge badge--video">
+            <Icon name="play" size={12} /> {labels.video}
+          </span>
+        )}
       </Link>
       <div className="product-body">
         <span className="product-cat">{cat?.name}</span>

@@ -7,6 +7,7 @@ import { resolveLocale, type LocaleParams } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
 import { CategoriesGrid } from "@/sections/CategoriesGrid";
 import { FeaturedProducts } from "@/sections/FeaturedProducts";
+import { ProductVideos } from "@/sections/ProductVideos";
 import { Hero } from "@/sections/Hero";
 import { WhoWeAre } from "@/sections/WhoWeAre";
 import { WhyUs } from "@/sections/WhyUs";
@@ -26,6 +27,7 @@ export default async function HomePage({ params }: { params: LocaleParams }) {
       <WhoWeAre locale={locale} />
       <CategoriesGrid locale={locale} />
       <FeaturedProducts locale={locale} />
+      <ProductVideos locale={locale} />
       <WhyUs locale={locale} />
       <CtaBand locale={locale} />
     </>

@@ -53,6 +53,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     moqUnknown: t.common.moqUnknown,
     placeholderNotice: t.common.placeholderNotice,
     illustrative: t.common.illustrative,
+    video: t.common.video,
   };
   const images = product.gallery.length ? product.gallery : product.image ? [product.image] : [];
 
@@ -113,6 +114,24 @@ export default async function ProductPage({ params }: { params: Params }) {
                 </tbody>
               </table>
               <p className="hint" style={{ margin: "1rem 0 1.5rem" }}>{d.pricing}</p>
+
+              {product.videos && product.videos.length > 0 && (
+                <div className="video-block">
+                  <h2 style={{ fontSize: "1.1rem" }}>{d.videosTitle}</h2>
+                  <div className="video-block-grid">
+                    {product.videos.map((video) => (
+                      <figure className="video-card" key={video.src}>
+                        <video controls playsInline preload="none" poster={video.poster} aria-label={`${product.name}: ${video.label}`}>
+                          <source src={video.src} type="video/mp4" />
+                        </video>
+                        <figcaption>
+                          <strong>{video.label}</strong>
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="btn-row">
                 <ButtonLink href={`${localePath(locale, "/contact")}?product=${encodeURIComponent(product.slug)}#inquiry`}>

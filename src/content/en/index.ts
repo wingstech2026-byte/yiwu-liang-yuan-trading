@@ -46,6 +46,7 @@ export const en = {
     home: "Home",
     placeholderNotice: "Placeholder listing",
     illustrative: "Illustrative image",
+    video: "Video",
     legalRep: "Legal Representative",
   },
 
@@ -85,6 +86,12 @@ export const en = {
       eyebrow: "Featured Products",
       title: "A look at our current range",
       text: "Ask about any product for specifications, MOQ and a quotation. Prices depend on quantity and requirements, so we quote each order individually.",
+    },
+    videos: {
+      eyebrow: "Product Videos",
+      title: "See our products on video",
+      text: "Short clips of products from our range. Press play to watch.",
+      viewProduct: "View product",
     },
     why: {
       eyebrow: "Why Work With Us",
@@ -178,6 +185,7 @@ export const en = {
       related: "Related products",
       back: "All products",
       pricing: "Pricing depends on quantity and specifications. Request a quote and we will respond with the details.",
+      videosTitle: "Product video",
       illustrativeNote: "The photos on this page are illustrative. The actual goods, grade and documentation are confirmed in your quotation.",
     },
   },
