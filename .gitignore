@@ -14,5 +14,7 @@ npm-debug.log*
 ALL IMAGES 1/
 *.zip
 *.mp4
+# ...but the converted website videos must be committed.
+!public/videos/*.mp4
 Yiwu_LiangYuan_Sitemap.pdf
 0dd423e9422a84112a544f79e3159041.jpg
