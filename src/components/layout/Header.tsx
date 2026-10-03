@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { localePath, type Locale } from "@/lib/site";
 
 interface Props {
   locale: Locale;
   nav: { key: string; label: string; path: string }[];
-  labels: { getQuote: string; openMenu: string; closeMenu: string; language: string; comingSoon: string };
+  labels: { getQuote: string; openMenu: string; closeMenu: string; language: string; comingSoon: string; quote: string };
   companyName: string;
   tagline: string;
 }
@@ -20,6 +21,7 @@ export function Header({ locale, nav, labels, companyName, tagline }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const { items: quoteItems } = useQuote();
 
   // Close the mobile menu on navigation and with Escape.
   useEffect(() => setOpen(false), [pathname]);
@@ -60,6 +62,10 @@ export function Header({ locale, nav, labels, companyName, tagline }: Props) {
 
         <div className="header-actions">
           <LanguageSelector locale={locale} label={labels.language} comingSoon={labels.comingSoon} />
+          <Link href={`${localePath(locale, "/contact")}#inquiry`} className="quote-link" aria-label={`${labels.quote}${quoteItems.length ? ` (${quoteItems.length})` : ""}`}>
+            <Icon name="list" size={22} />
+            {quoteItems.length > 0 && <span className="quote-count" aria-hidden="true">{quoteItems.length}</span>}
+          </Link>
           <Link href={localePath(locale, "/contact")} className="btn btn--primary btn--sm">
             {labels.getQuote}
           </Link>

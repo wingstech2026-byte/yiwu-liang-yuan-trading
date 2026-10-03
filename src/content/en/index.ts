@@ -54,6 +54,31 @@ export const en = {
     legalRep: "Legal Representative",
   },
 
+  quote: {
+    add: "Add to quote list",
+    added: "In quote list",
+    remove: "Remove",
+    linkLabel: "Quote list",
+    summaryTitle: "Products on your quote list",
+    summaryHint: "These products are sent with your inquiry.",
+    clear: "Clear list",
+    removeItem: "Remove from quote list",
+  },
+
+  floating: {
+    whatsapp: "Chat on WhatsApp",
+    backToTop: "Back to top",
+  },
+
+  consent: {
+    title: "Cookies and chat",
+    text: "We would like to use optional cookies for analytics and our live chat. The website works without them.",
+    accept: "Accept",
+    decline: "Decline",
+    policy: "Cookie Policy",
+    settings: "Cookie settings",
+  },
+
   home: {
     title: "Yiwu Trading Company | China Sourcing & Wholesale Supplier",
     description:
@@ -96,6 +121,12 @@ export const en = {
       title: "See our products on video",
       text: "Short clips of products from our range. Press play to watch.",
       viewProduct: "View product",
+    },
+    process: {
+      eyebrow: "How It Works",
+      title: "From inquiry to delivery in six steps",
+      text: "A simple, transparent process. We confirm details with you in writing at each stage.",
+      cta: "Read the full ordering guide",
     },
     why: {
       eyebrow: "Why Work With Us",
@@ -188,6 +219,10 @@ export const en = {
       specs: "Specifications",
       related: "Related products",
       back: "All products",
+      zoom: "Enlarge image",
+      closeZoom: "Close",
+      prevImage: "Previous image",
+      nextImage: "Next image",
       pricing: "Pricing depends on quantity and specifications. Request a quote and we will respond with the details.",
       videosTitle: "Product video",
       illustrativeNote: "The photos on this page are illustrative. The actual goods, grade and documentation are confirmed in your quotation.",

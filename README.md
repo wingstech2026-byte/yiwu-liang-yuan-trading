@@ -42,16 +42,32 @@ Products with `status: "placeholder"` show a "Placeholder listing" badge, are se
 ### Languages
 Copy a content folder (`src/content/en` → `src/content/fr`), translate by hand, register it in `src/content/index.ts`, and add the code to `locales` in `src/lib/site.ts`. For Arabic, also set `dir="rtl"` in `src/app/[locale]/layout.tsx`. The language selector already lists the planned languages as "coming soon".
 
-## Inquiries
+## Inquiries and the quote list
 
-`POST /api/inquiry` validates and sanitises input, enforces a same-origin check, a honeypot field, a per-IP rate limit (5 per 15 minutes), and an upload allow-list (JPG/PNG/PDF, 5 MB, checked by file signature, stored under a random name). Inquiries are appended to `data/inquiries/inquiries.jsonl` and uploads to `data/inquiries/uploads/`. **No email is sent.** The form only shows "received" after the write succeeds. View them with `npm run inquiries`.
+Visitors can add products to a **quote list** (header icon, product cards, product pages) and send them together in one inquiry. The list is kept in the browser (localStorage) and is cleared after a successful submission.
 
-To send email or use a database later, implement the `InquiryStore` interface in `src/services/inquiry-store.ts`.
+`POST /api/inquiry` validates and sanitises input, enforces a same-origin check, a honeypot field, a per-IP rate limit (5 per 15 minutes), and an upload allow-list (JPG/PNG/PDF, 5 MB, checked by file signature, stored under a random name).
+
+**Where inquiries go** (`src/services/inquiry-store.ts`, `src/services/notify.ts`):
+1. **Saved** to Netlify Blobs when running on Netlify, or to `data/inquiries/inquiries.jsonl` (uploads in `data/inquiries/uploads/`) on a normal Node host. If the first fails, the other is tried.
+2. **Emailed** (optional): set `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` (and `INQUIRY_FROM_EMAIL` on a domain verified in Resend, see https://resend.com). The email includes the quote-list products and the attached reference file.
+
+The form only shows "received" if the inquiry was really saved or really emailed; otherwise the visitor sees an error. If email fails but the save worked, the visitor still sees success and the inquiry is stored. Locally, view saved inquiries with `npm run inquiries`. On Netlify, the quickest way to receive them is the email option.
+
+To use a database or another provider, implement the `InquiryStore` interface.
 
 Notes for deployment:
-- File storage needs a Node host with a **persistent writable disk** (VPS, Render, Railway…). It will not persist on serverless platforms such as Vercel. Set `INQUIRY_DATA_DIR` to a persistent path and back it up.
+- On a normal Node host, file storage needs a **persistent writable disk** (VPS, Render, Railway…); set `INQUIRY_DATA_DIR` to a persistent path and back it up.
 - Run behind a reverse proxy that sets `X-Forwarded-For` and keeps the original `Host` header (used for the same-origin check and rate limiting). The rate limiter is in memory, so it is per process.
 - Serve over HTTPS. Security headers (CSP, HSTS, X-Frame-Options, etc.) are set in `next.config.mjs` in production.
+
+## Cookie banner
+
+The banner only appears if Google Analytics, Meta Pixel or Crisp is configured. Those scripts load only after a visitor clicks Accept, and the footer "Cookie settings" link lets them change their mind. With nothing configured there is no banner and no third-party script.
+
+## WhatsApp button
+
+A floating WhatsApp button appears automatically once `contact.whatsapp` is set in `src/data/company.ts`.
 
 ## SEO
 

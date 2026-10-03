@@ -18,6 +18,7 @@ body {
   color: var(--ink);
   background: var(--surface);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* safety net: nothing may widen the page sideways (clip does not break sticky) */
   text-rendering: optimizeLegibility;
 }
 
@@ -102,6 +103,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .channel dd,
 .spec-table td,
 .cta-inner p,
+/* narrow columns: justified text leaves ugly gaps, keep these left-aligned */
+.timeline-step p,
+.feature p,
+.step p,
+.cat-body p,
+.product-body p,
+.video-card figcaption,
 .btn,
 .badge {
   text-align: inherit;

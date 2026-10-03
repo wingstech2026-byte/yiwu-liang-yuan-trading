@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 import { Analytics } from "@/components/seo/Analytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ScrollEffects } from "@/components/ui/ScrollEffects";
+import { QuoteProvider } from "@/components/quote/QuoteProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { company } from "@/data/company";
+import { company, getChannels } from "@/data/company";
+import { FloatingActions } from "@/components/ui/FloatingActions";
+import { hasChat } from "@/lib/optional-scripts";
 import { getDictionary } from "@/content";
 import { isLocale, locales, siteUrl } from "@/lib/site";
 import { organizationSchema } from "@/lib/seo";
@@ -49,6 +52,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} dir="ltr" className={inter.variable}>
       <body>
+        <QuoteProvider labels={t.quote}>
         <ScrollEffects />
         <a className="skip-link" href="#main">
           {t.common.skipToContent}
@@ -69,14 +73,21 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             closeMenu: t.common.closeMenu,
             language: t.common.language,
             comingSoon: t.common.comingSoon,
+            quote: t.quote.linkLabel,
           }}
           companyName={company.name}
           tagline="Sourcing & Wholesale · Yiwu, China"
         />
         <main id="main">{children}</main>
         <Footer locale={locale} />
+        <FloatingActions
+          whatsappHref={getChannels().find((c) => c.key === "whatsapp")?.href ?? null}
+          labels={t.floating}
+          chatEnabled={hasChat}
+        />
         <JsonLd data={organizationSchema(locale)} />
-        <Analytics />
+        <Analytics locale={locale} labels={t.consent} />
+        </QuoteProvider>
       </body>
     </html>
   );

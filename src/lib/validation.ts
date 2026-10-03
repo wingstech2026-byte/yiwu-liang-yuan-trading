@@ -10,6 +10,7 @@ export const LIMITS = {
   quantity: { max: 100 },
   targetPrice: { max: 60 },
   message: { min: 10, max: 4000 },
+  items: { max: 900 },
   fileBytes: 5 * 1024 * 1024,
 } as const;
 
@@ -23,13 +24,14 @@ export interface InquiryInput {
   quantity: string;
   targetPrice: string;
   message: string;
+  items: string; // products added to the visitor's quote list (names), optional
 }
 
 export type FieldErrors = Partial<Record<keyof InquiryInput | "file", string>>;
 
 // eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
-const BIDI = /[‎‏‪-‮⁦-⁩]/g;
+const BIDI = /[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g;
 
 /** Single-line text: strip control/bidi characters, collapse whitespace, trim. */
 export function cleanLine(v: unknown, max: number): string {
@@ -63,6 +65,7 @@ export function validateInquiry(raw: Record<string, unknown>): { data?: InquiryI
     quantity: cleanLine(raw.quantity, LIMITS.quantity.max),
     targetPrice: cleanLine(raw.targetPrice, LIMITS.targetPrice.max),
     message: cleanText(raw.message, LIMITS.message.max),
+    items: cleanLine(raw.items, LIMITS.items.max),
   };
 
   const errors: FieldErrors = {};

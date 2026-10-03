@@ -4,6 +4,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { isLocale } from "@/lib/site";
 import { detectFileType, LIMITS, validateInquiry } from "@/lib/validation";
 import { inquiryStore, type InquiryRecord } from "@/services/inquiry-store";
+import { sendInquiryEmail } from "@/services/notify";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
 
   // 5. Validate & sanitise fields.
   const fields: Record<string, unknown> = {};
-  for (const key of ["name", "company", "country", "email", "whatsapp", "product", "quantity", "targetPrice", "message"]) {
+  for (const key of ["name", "company", "country", "email", "whatsapp", "product", "quantity", "targetPrice", "message", "items"]) {
     fields[key] = form.get(key);
   }
   const { data, errors } = validateInquiry(fields);
@@ -82,27 +83,37 @@ export async function POST(req: NextRequest) {
 
   if (errors || fileErrors.file || !data) return json({ ok: false, errors: { ...errors, ...fileErrors } }, 422);
 
-  // 7. Persist. Success is only reported after the write succeeds.
+  // 7. Save, and email a copy if email is configured. Success is only reported when the inquiry was really
+  //    saved or really emailed: never a silent loss.
+  const localeRaw = form.get("locale");
+  const record: InquiryRecord = {
+    ...data,
+    id,
+    createdAt: new Date().toISOString(),
+    locale: typeof localeRaw === "string" && isLocale(localeRaw) ? localeRaw : "en",
+    ipHash: ip === "unknown" ? null : createHash("sha256").update(ip).digest("hex").slice(0, 16),
+    file: null,
+  };
+
+  let stored = false;
   try {
-    const localeRaw = form.get("locale");
-    const record: InquiryRecord = {
-      ...data,
-      id,
-      createdAt: new Date().toISOString(),
-      locale: typeof localeRaw === "string" && isLocale(localeRaw) ? localeRaw : "en",
-      ipHash: ip === "unknown" ? null : createHash("sha256").update(ip).digest("hex").slice(0, 16),
-      file: null,
-    };
     if (upload) {
       const storedAs = await inquiryStore.saveUpload(id, upload.ext, upload.bytes);
       record.file = { storedAs, originalName: upload.originalName, mime: upload.mime, bytes: upload.bytes.byteLength };
     }
     await inquiryStore.saveInquiry(record);
-    return json({ ok: true });
+    stored = true;
   } catch (err) {
     console.error("[inquiry] failed to store inquiry", err instanceof Error ? err.message : err);
-    return json({ ok: false, error: "server_error" }, 500);
   }
+
+  const emailed = await sendInquiryEmail(
+    record,
+    upload ? { filename: `reference.${upload.ext}`, data: upload.bytes } : null,
+  );
+
+  if (!stored && emailed !== "sent") return json({ ok: false, error: "server_error" }, 500);
+  return json({ ok: true });
 }
 
 // Everything else is not allowed.

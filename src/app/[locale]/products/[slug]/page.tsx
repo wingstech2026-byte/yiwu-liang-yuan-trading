@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { ProductGallery } from "@/components/products/ProductGallery";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { ButtonLink } from "@/components/ui/Button";
+import { AddToQuoteButton } from "@/components/quote/AddToQuoteButton";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { categoryBySlug } from "@/data/categories";
@@ -89,6 +90,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               name={product.name}
               category={product.category}
               illustrativeLabel={product.illustrative ? t.common.illustrative : undefined}
+              labels={{ zoom: d.zoom, closeZoom: d.closeZoom, prevImage: d.prevImage, nextImage: d.nextImage }}
             />
             <div>
               <span className="product-cat">{cat?.name}</span>
@@ -137,6 +139,7 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <ButtonLink href={`${localePath(locale, "/contact")}?product=${encodeURIComponent(product.slug)}#inquiry`}>
                   {t.common.requestQuote}
                 </ButtonLink>
+                <AddToQuoteButton slug={product.slug} name={product.name} category={cat?.name ?? ""} />
                 <ButtonLink href={localePath(locale, "/products")} variant="outline">
                   {d.back}
                 </ButtonLink>

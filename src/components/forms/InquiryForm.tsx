@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { LIMITS, validateInquiry, type FieldErrors } from "@/lib/validation";
 import { localePath, type Locale } from "@/lib/site";
 
@@ -47,6 +48,7 @@ const ALLOWED_EXT = /\.(jpe?g|png|pdf)$/i;
 
 export function InquiryForm({ locale, labels, categories, products, otherLabel }: Props) {
   const params = useSearchParams();
+  const quote = useQuote();
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -62,6 +64,12 @@ export function InquiryForm({ locale, labels, categories, products, otherLabel }
       setPrefill({ product: match.categoryName, message: `I would like a quotation for: ${match.name}.\n\nQuantity / destination: ` });
     }
   }, [params, products]);
+
+  useEffect(() => {
+    if (!quote.ready || quote.items.length === 0) return;
+    setPrefill((p) => (p.product ? p : { ...p, product: quote.items[0].category }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quote.ready]);
 
   useEffect(() => {
     if (status === "success") successRef.current?.focus();
@@ -91,6 +99,7 @@ export function InquiryForm({ locale, labels, categories, products, otherLabel }
     setErrors({});
     if (!(file instanceof File && file.size > 0)) fd.delete("file");
     fd.set("locale", locale);
+    fd.set("items", quote.items.map((i) => i.name).join(" | "));
 
     setStatus("sending");
     try {
@@ -99,6 +108,7 @@ export function InquiryForm({ locale, labels, categories, products, otherLabel }
       if (res.ok && body.ok) {
         setStatus("success");
         form.reset();
+        quote.clear();
         return;
       }
       setStatus("error");
@@ -148,6 +158,28 @@ export function InquiryForm({ locale, labels, categories, products, otherLabel }
           <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
+
+      {quote.items.length > 0 && (
+        <div className="quote-summary" role="region" aria-label={quote.labels.summaryTitle}>
+          <div className="quote-summary-head">
+            <strong>{quote.labels.summaryTitle}</strong>
+            <button type="button" className="link-button" onClick={quote.clear}>
+              {quote.labels.clear}
+            </button>
+          </div>
+          <ul>
+            {quote.items.map((item) => (
+              <li key={item.slug}>
+                <span>{item.name}</span>
+                <button type="button" className="quote-remove" onClick={() => quote.remove(item.slug)} aria-label={`${quote.labels.removeItem}: ${item.name}`}>
+                  <Icon name="close" size={16} />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p className="hint">{quote.labels.summaryHint}</p>
+        </div>
+      )}
 
       <div className="form-grid">
         <div className="field">

@@ -12,8 +12,9 @@ export interface InquiryRecord extends InquiryInput {
 }
 
 /**
- * Storage abstraction. The file-based implementation below is the default.
- * To move to a database or send email, implement this interface and export it as `inquiryStore`.
+ * Storage abstraction. Implementations below: local files (VPS / local dev) and Netlify Blobs (Netlify).
+ * `inquiryStore` tries them in a sensible order and falls back to the next one if a write fails, so
+ * the same code works on Netlify (read-only filesystem) and on a normal Node server.
  */
 export interface InquiryStore {
   saveInquiry(record: InquiryRecord): Promise<void>;
@@ -55,4 +56,63 @@ class FileInquiryStore implements InquiryStore {
   }
 }
 
-export const inquiryStore: InquiryStore = new FileInquiryStore();
+/** Netlify Blobs: durable key-value storage that works from Netlify functions with no extra setup. */
+class NetlifyBlobsInquiryStore implements InquiryStore {
+  private async store() {
+    const { getStore } = await import("@netlify/blobs");
+    return getStore({ name: "inquiries", consistency: "strong" });
+  }
+
+  async saveInquiry(record: InquiryRecord) {
+    const store = await this.store();
+    await store.setJSON(`records/${record.createdAt}-${record.id}`, record);
+  }
+
+  async saveUpload(id: string, ext: string, data: Uint8Array) {
+    const store = await this.store();
+    const key = `uploads/${id}-${randomUUID().slice(0, 8)}.${ext}`;
+    const copy = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
+    await store.set(key, copy);
+    return key;
+  }
+
+  async list() {
+    const store = await this.store();
+    const { blobs } = await store.list({ prefix: "records/" });
+    const rows = await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" }) as Promise<InquiryRecord | null>));
+    return rows.filter((r): r is InquiryRecord => !!r);
+  }
+}
+
+/** Tries each store in order; the first one that succeeds wins. */
+class FallbackInquiryStore implements InquiryStore {
+  constructor(private readonly stores: InquiryStore[]) {}
+
+  private async first<T>(fn: (s: InquiryStore) => Promise<T>): Promise<T> {
+    let lastError: unknown;
+    for (const store of this.stores) {
+      try {
+        return await fn(store);
+      } catch (err) {
+        lastError = err;
+      }
+    }
+    throw lastError;
+  }
+
+  saveInquiry(record: InquiryRecord) {
+    return this.first((s) => s.saveInquiry(record));
+  }
+  saveUpload(id: string, ext: string, data: Uint8Array) {
+    return this.first((s) => s.saveUpload(id, ext, data));
+  }
+  list() {
+    return this.first((s) => s.list());
+  }
+}
+
+// On Netlify prefer Blobs (the filesystem there is read-only); elsewhere prefer local files.
+const onNetlify = Boolean(process.env.NETLIFY);
+export const inquiryStore: InquiryStore = new FallbackInquiryStore(
+  onNetlify ? [new NetlifyBlobsInquiryStore(), new FileInquiryStore()] : [new FileInquiryStore(), new NetlifyBlobsInquiryStore()],
+);

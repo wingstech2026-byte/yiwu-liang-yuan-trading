@@ -58,6 +58,7 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [360, 640, 828, 1080, 1280, 1600],
+    qualities: [75, 85], // 85 is used by the product zoom viewer
   },
   async redirects() {
     return [{ source: "/", destination: "/en", permanent: false }];

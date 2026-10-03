@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { company, developer, fullAddress, getChannels } from "@/data/company";
 import { getDictionary } from "@/content";
+import { CookieSettingsButton } from "@/components/seo/CookieSettingsButton";
 import { localePath, type Locale } from "@/lib/site";
 
 export function Footer({ locale }: { locale: Locale }) {
@@ -72,6 +73,9 @@ export function Footer({ locale }: { locale: Locale }) {
                 <Link href={localePath(locale, l.path)}>{l.label}</Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton label={t.consent.settings} />
+            </li>
           </ul>
         </div>
       </div>

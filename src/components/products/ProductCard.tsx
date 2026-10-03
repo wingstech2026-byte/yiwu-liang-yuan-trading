@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { AddToQuoteButton } from "@/components/quote/AddToQuoteButton";
 import { categoryBySlug } from "@/data/categories";
 import type { Product } from "@/data/products";
 import { localePath, type Locale } from "@/lib/site";
@@ -59,6 +60,7 @@ export function ProductCard({ product, locale, labels }: { product: Product; loc
           <ButtonLink href={quoteHref} small>
             {labels.requestQuote}
           </ButtonLink>
+          <AddToQuoteButton slug={product.slug} name={product.name} category={cat?.name ?? ""} small />
         </div>
       </div>
     </article>

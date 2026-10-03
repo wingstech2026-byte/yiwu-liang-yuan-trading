@@ -8,6 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import { CategoriesGrid } from "@/sections/CategoriesGrid";
 import { FeaturedProducts } from "@/sections/FeaturedProducts";
 import { ProductVideos } from "@/sections/ProductVideos";
+import { ProcessTimeline } from "@/sections/ProcessTimeline";
 import { Hero } from "@/sections/Hero";
 import { WhoWeAre } from "@/sections/WhoWeAre";
 import { WhyUs } from "@/sections/WhyUs";
@@ -29,6 +30,7 @@ export default async function HomePage({ params }: { params: LocaleParams }) {
       <FeaturedProducts locale={locale} />
       <ProductVideos locale={locale} />
       <WhyUs locale={locale} />
+      <ProcessTimeline locale={locale} />
       <CtaBand locale={locale} />
     </>
   );
