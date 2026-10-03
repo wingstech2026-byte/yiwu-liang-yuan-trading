@@ -61,6 +61,16 @@ Per-page titles, descriptions, canonical and language alternates, Open Graph/Twi
 
 Disabled until you set `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_META_PIXEL_ID`. If you serve visitors in regions that require cookie consent, add a consent banner before enabling them.
 
+## Live chat (Crisp)
+
+Disabled until you set `NEXT_PUBLIC_CRISP_WEBSITE_ID`. Steps:
+1. Create a free account at https://crisp.chat and add your website.
+2. Copy the **Website ID** (a UUID such as `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`) from Settings > Website Settings > Setup instructions.
+3. Put it in `.env.local` (local), or in the Netlify environment variables (Site configuration > Environment variables), then redeploy.
+4. In Crisp, add your site domain under the website's trusted domains if asked.
+
+The widget loads lazily after the page, and the security headers in `next.config.mjs` only allow Crisp when a valid ID is set. The Privacy and Cookie pages already mention it.
+
 ## Images
 
 `public/images/` holds web-optimised copies of the supplied photos (`npm run images` re-creates them from `ALL IMAGES 1/`). Gemstone, gold-bar and tantalum products use the supplied photos and are marked **"Illustrative image"** with an inquiry-only compliance notice (these are outside the licensed business scope listed on the About page, so confirm you may offer them and have the paperwork). The gold nugget photos are deliberately **not** used (clip-art style, stock-site watermark). Several supplied photos look like generic internet images (copper concentrate, tantalum, gold); replace them with your own product photos when you have them.
