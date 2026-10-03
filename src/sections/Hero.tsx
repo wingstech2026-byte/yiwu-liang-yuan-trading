@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
+import { HeroVideo } from "@/components/ui/HeroVideo";
+import { visibleProducts } from "@/data/products";
 import { getDictionary } from "@/content";
 import { localePath, type Locale } from "@/lib/site";
+
+// The hero shows the Lalla Bella brand video. It is read from product data so the clip is defined in one place.
+const heroVideo = visibleProducts.find((p) => p.slug === "lalla-bella-glass-bottle-sample")?.videos?.[0] ?? null;
 
 export function Hero({ locale }: { locale: Locale }) {
   const t = getDictionary(locale);
@@ -26,6 +31,7 @@ export function Hero({ locale }: { locale: Locale }) {
             </ButtonLink>
           </div>
         </div>
+        {heroVideo && <HeroVideo src={heroVideo.src} poster={heroVideo.poster} label={heroVideo.label} playLabel={t.common.playVideo} />}
       </div>
       <span className="scroll-cue" aria-hidden="true" title={h.scroll} />
     </section>

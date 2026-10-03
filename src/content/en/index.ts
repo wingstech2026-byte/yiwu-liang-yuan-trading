@@ -47,6 +47,7 @@ export const en = {
     placeholderNotice: "Placeholder listing",
     illustrative: "Illustrative image",
     video: "Video",
+    playVideo: "Play video",
     legalRep: "Legal Representative",
   },
 
