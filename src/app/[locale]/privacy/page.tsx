@@ -36,6 +36,12 @@ export default async function PrivacyPage({ params }: { params: LocaleParams }) 
         details through this website.
       </p>
 
+      <h2>Live chat</h2>
+      <p>
+        If you use the live chat on this website, the messages you send, and any details you give in them, are processed by our chat
+        provider, Crisp, so that we can reply to you. Please do not share payment card or password details in chat.
+      </p>
+
       <h2>How we use it</h2>
       <p>
         We use your information to respond to your inquiry, prepare quotations and communicate with you about your order. We do not

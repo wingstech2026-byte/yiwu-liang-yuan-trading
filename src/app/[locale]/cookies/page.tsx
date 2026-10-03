@@ -27,7 +27,13 @@ export default async function CookiesPage({ params }: { params: LocaleParams }) 
       <h2>Analytics</h2>
       <p>
         If we enable an analytics or advertising tool (for example Google Analytics or Meta Pixel), that provider may set cookies or
-        similar identifiers to measure visits. These tools load only when we have configured them,.
+        similar identifiers to measure visits. These tools load only when we have configured them.
+      </p>
+
+      <h2>Live chat</h2>
+      <p>
+        If we enable the live chat widget, it is provided by Crisp. Crisp may store a cookie or similar identifier in your browser to
+        keep your conversation going and to recognise you when you return. The chat does not load unless we have configured it.
       </p>
 
       <h2>Controlling cookies</h2>
