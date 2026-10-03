@@ -31,7 +31,6 @@ export function Hero({ locale }: { locale: Locale }) {
             </ButtonLink>
           </div>
         </div>
-        <span className="scroll-cue" aria-hidden="true" title={h.scroll} />
       </div>
       {heroVideo && (
         <HeroVideo

@@ -59,30 +59,28 @@ export function HeroVideo({ src, poster, label, labels }: Props) {
   };
 
   return (
-    <div className="hero-media" style={{ "--poster": `url(${poster})` } as React.CSSProperties}>
-      <div className="hero-media-frame">
-        <video
-          ref={ref}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={poster}
-          aria-label={label}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-        >
-          <source src={src} type="video/mp4" />
-        </video>
-        <span className="hero-media-label">{label}</span>
-        <div className="hero-media-controls">
-          <button type="button" className="hero-ctrl" onClick={toggleMute} aria-label={muted ? labels.unmute : labels.mute}>
-            <Icon name={muted ? "volume-off" : "volume"} size={20} />
-          </button>
-          <button type="button" className="hero-ctrl" onClick={toggle} aria-label={playing ? labels.pause : labels.play}>
-            <Icon name={playing ? "pause" : "play"} size={20} />
-          </button>
-        </div>
+    <div className="hero-media">
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster={poster}
+        aria-label={label}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+      <span className="hero-media-label">{label}</span>
+      <div className="hero-media-controls">
+        <button type="button" className="hero-ctrl" onClick={toggleMute} aria-label={muted ? labels.unmute : labels.mute}>
+          <Icon name={muted ? "volume-off" : "volume"} size={20} />
+        </button>
+        <button type="button" className="hero-ctrl" onClick={toggle} aria-label={playing ? labels.pause : labels.play}>
+          <Icon name={playing ? "pause" : "play"} size={20} />
+        </button>
       </div>
     </div>
   );
