@@ -14,6 +14,7 @@ export function FeaturedProducts({ locale }: { locale: Locale }) {
     moq: t.common.moq,
     moqUnknown: t.common.moqUnknown,
     placeholderNotice: t.common.placeholderNotice,
+    illustrative: t.common.illustrative,
   };
   return (
     <section className="section" aria-labelledby="featured-title">

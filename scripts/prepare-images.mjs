@@ -14,13 +14,19 @@ const groups = [
   // Skips "copper (3)" (yellow powder, not copper concentrate) and "copper (5)" (Google results screenshot
   // with third-party watermarks).
   { dir: "Image of Copper concentrate", prefix: "copper-concentrate", exts: [".jpg"], pick: [1, 2, 4] },
+  // Gemstones: skips (1) (phone screenshot with device watermark). "- Copy" duplicates are ignored for all groups.
+  { dir: "Images of Gemstones", prefix: "gemstone", exts: [".jpg"], pick: [2, 3, 4, 5, 6, 7] },
+  { dir: "Images of gold bars", prefix: "gold-bars", exts: [".jpg"] },
+  // Tantalum: ore in a bag, black granules, powder. Skips the generic mixed-rock and orange-pebble photos.
+  // Gold nugget photos are NOT used (clip-art style, stock-site watermark).
+  { dir: "Tantalum Stock Photos, Pictures & Royalty-Free Images", prefix: "tantalum", exts: [".jpg"], pick: [1, 2, 5] },
 ];
 
 await mkdir(OUT, { recursive: true });
 
 for (const g of groups) {
   const files = (await readdir(path.join(SRC, g.dir)))
-    .filter((f) => g.exts.includes(path.extname(f).toLowerCase()))
+    .filter((f) => g.exts.includes(path.extname(f).toLowerCase()) && !/ - Copy/i.test(f))
     .sort()
     .filter((_, idx) => !g.pick || g.pick.includes(idx + 1));
   let i = 1;

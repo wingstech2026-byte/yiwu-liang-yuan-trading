@@ -36,6 +36,7 @@ export default async function ProductsPage({ params }: { params: LocaleParams })
                 moq: t.common.moq,
                 moqUnknown: t.common.moqUnknown,
                 placeholderNotice: t.common.placeholderNotice,
+                illustrative: t.common.illustrative,
                 searchLabel: p.searchLabel,
                 searchPlaceholder: p.searchPlaceholder,
                 all: p.all,

@@ -45,6 +45,7 @@ export const en = {
     comingSoon: "coming soon",
     home: "Home",
     placeholderNotice: "Placeholder listing",
+    illustrative: "Illustrative image",
     legalRep: "Legal Representative",
   },
 
@@ -78,7 +79,7 @@ export const en = {
     categories: {
       eyebrow: "Product Categories",
       title: "One partner, many product lines",
-      text: "Our categories follow our registered business scope. Pick a category to see what is available, or send us your requirements for anything not listed.",
+      text: "Pick a category to see what is available. Some items are supplied on inquiry only. Send us your requirements for anything not listed.",
     },
     featured: {
       eyebrow: "Featured Products",
@@ -177,6 +178,7 @@ export const en = {
       related: "Related products",
       back: "All products",
       pricing: "Pricing depends on quantity and specifications. Request a quote and we will respond with the details.",
+      illustrativeNote: "The photos on this page are illustrative. The actual goods, grade and documentation are confirmed in your quotation.",
     },
   },
 

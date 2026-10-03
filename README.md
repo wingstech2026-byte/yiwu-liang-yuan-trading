@@ -63,4 +63,6 @@ Disabled until you set `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_META_PIXEL_ID`. I
 
 ## Images
 
-`public/images/` holds web-optimised copies of the supplied photos. Gold, gemstone and tantalum images in `ALL IMAGES 1/` are deliberately **not** used (outside the confirmed product scope). Several supplied copper photos look like generic internet images; replace them with your own product photos when you have them.
+`public/images/` holds web-optimised copies of the supplied photos (`npm run images` re-creates them from `ALL IMAGES 1/`). Gemstone, gold-bar and tantalum products use the supplied photos and are marked **"Illustrative image"** with an inquiry-only compliance notice (these are outside the licensed business scope listed on the About page, so confirm you may offer them and have the paperwork). The gold nugget photos are deliberately **not** used (clip-art style, stock-site watermark). Several supplied photos look like generic internet images (copper concentrate, tantalum, gold); replace them with your own product photos when you have them.
+
+Perfume videos live in `public/videos/` as H.264 MP4 with poster frames. The originals were HEVC, which many browsers cannot play, so they were converted (ffmpeg, not a project dependency). Add a clip to a product with the `videos` field in `src/data/products.ts`.

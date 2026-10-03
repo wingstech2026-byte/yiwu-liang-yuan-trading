@@ -11,6 +11,7 @@ export interface ProductCardLabels {
   moq: string;
   moqUnknown: string;
   placeholderNotice: string;
+  illustrative: string;
 }
 
 export function PlaceholderTile({ category }: { category: string }) {
@@ -37,6 +38,7 @@ export function ProductCard({ product, locale, labels }: { product: Product; loc
           <PlaceholderTile category={product.category} />
         )}
         {product.status === "placeholder" && <span className="badge badge--warn">{labels.placeholderNotice}</span>}
+        {product.illustrative && product.status !== "placeholder" && <span className="badge badge--warn">{labels.illustrative}</span>}
       </Link>
       <div className="product-body">
         <span className="product-cat">{cat?.name}</span>

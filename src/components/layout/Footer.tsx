@@ -78,16 +78,19 @@ export function Footer({ locale }: { locale: Locale }) {
 
       <div className="container footer-bottom">
         <span>{t.footer.copyright}</span>
-        <span>
-          Developed by {developer.name}
-          {developer.whatsapp && (
-            <>
-              {" · "}
-              <a href={`https://wa.me/${developer.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
-                WhatsApp {developer.whatsapp}
-              </a>
-            </>
-          )}
+        <span className="dev-credit">
+          <Image src="/images/developer.jpg" alt={`Photo of ${developer.name}`} width={36} height={36} className="dev-avatar" />
+          <span>
+            Developed by {developer.name}
+            {developer.whatsapp && (
+              <>
+                {" · "}
+                <a href={`https://wa.me/${developer.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
+                  WhatsApp {developer.whatsapp}
+                </a>
+              </>
+            )}
+          </span>
         </span>
         <span lang="zh">{company.nameZh}</span>
       </div>

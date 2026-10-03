@@ -78,6 +78,37 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .skip-link:focus { top: var(--sp-3); }
 
+/* Justified body copy. Hyphenation keeps word gaps tidy; narrow phone columns stay left-aligned. */
+@media (min-width: 640px) {
+  p,
+  .faq-a,
+  .prose li,
+  .check-list li span {
+    text-align: justify;
+    text-justify: inter-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}
+/* Centered or short UI text keeps its own alignment. */
+.text-center p,
+.section-heading--center p,
+.form-success p,
+.empty-state,
+.hint,
+.field-error,
+.form-alert,
+.site-footer p,
+.channel dd,
+.spec-table td,
+.cta-inner p,
+.btn,
+.badge {
+  text-align: inherit;
+  -webkit-hyphens: manual;
+  hyphens: manual;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {

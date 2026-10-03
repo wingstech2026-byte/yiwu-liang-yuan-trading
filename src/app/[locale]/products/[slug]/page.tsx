@@ -52,6 +52,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     moq: t.common.moq,
     moqUnknown: t.common.moqUnknown,
     placeholderNotice: t.common.placeholderNotice,
+    illustrative: t.common.illustrative,
   };
   const images = product.gallery.length ? product.gallery : product.image ? [product.image] : [];
 
@@ -80,11 +81,20 @@ export default async function ProductPage({ params }: { params: Params }) {
             ]}
           />
           <div className="detail">
-            <ProductGallery images={images} alt={product.alt} name={product.name} category={product.category} />
+            <ProductGallery
+              images={images}
+              videos={product.videos}
+              alt={product.alt}
+              name={product.name}
+              category={product.category}
+              illustrativeLabel={product.illustrative ? t.common.illustrative : undefined}
+            />
             <div>
               <span className="product-cat">{cat?.name}</span>
               <h1 style={{ fontSize: "var(--fs-h2)", marginTop: "0.5rem" }}>{product.name}</h1>
               {product.status === "placeholder" && <p className="notice" style={{ marginBottom: "1rem" }}>{t.common.placeholderNotice}</p>}
+              {product.illustrative && <p className="notice" style={{ marginBottom: "1rem" }}>{t.products.detail.illustrativeNote}</p>}
+              {product.note && <p className="notice" style={{ marginBottom: "1rem" }}>{product.note}</p>}
               <p className="lead">{product.description}</p>
 
               <h2 style={{ fontSize: "1.1rem", marginTop: "2rem" }}>{d.specs}</h2>
