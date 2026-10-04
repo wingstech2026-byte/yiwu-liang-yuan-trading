@@ -372,7 +372,7 @@ export const en = {
     message: "Message",
     messagePlaceholder: "Describe the product, specifications, packaging, destination port or city, and anything else we should know.",
     file: "Upload Product Reference",
-    fileHint: "Optional. JPG, PNG or PDF, up to 5 MB.",
+    fileHint: "Optional. JPG, PNG or PDF, up to 4 MB.",
     submit: "Submit Inquiry",
     submitting: "Sending…",
     success: "Thank you. Your inquiry has been received. Our team will contact you shortly.",

@@ -11,7 +11,7 @@ export const LIMITS = {
   targetPrice: { max: 60 },
   message: { min: 10, max: 4000 },
   items: { max: 900 },
-  fileBytes: 5 * 1024 * 1024,
+  fileBytes: 4 * 1024 * 1024, // Vercel rejects request bodies above ~4.5 MB, so keep uploads under that
 } as const;
 
 export interface InquiryInput {

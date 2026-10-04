@@ -87,7 +87,7 @@ export function InquiryForm({ locale, labels, categories, products, otherLabel }
     const next: FieldErrors = { ...clientErrors };
     const file = fd.get("file");
     if (file instanceof File && file.size > 0) {
-      if (file.size > LIMITS.fileBytes) next.file = "File is too large (max 5 MB).";
+      if (file.size > LIMITS.fileBytes) next.file = "File is too large (max 4 MB).";
       else if (!ALLOWED_EXT.test(file.name)) next.file = "Unsupported file. Please upload a JPG, PNG or PDF.";
     }
     if (Object.keys(next).length) {

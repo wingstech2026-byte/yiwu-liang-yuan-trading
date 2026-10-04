@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
   // 2. Size limit (declared) and content type.
   const declared = Number(req.headers.get("content-length") ?? 0);
-  if (declared > MAX_BODY) return json({ ok: false, errors: { file: "File is too large (max 5 MB)." } }, 413);
+  if (declared > MAX_BODY) return json({ ok: false, errors: { file: "File is too large (max 4 MB)." } }, 413);
   if (!(req.headers.get("content-type") ?? "").includes("multipart/form-data")) return json({ ok: false, error: "bad_request" }, 415);
 
   // 3. Rate limit per IP.
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
   const fileErrors: { file?: string } = {};
   if (file instanceof File && file.size > 0) {
     if (file.size > LIMITS.fileBytes) {
-      fileErrors.file = "File is too large (max 5 MB).";
+      fileErrors.file = "File is too large (max 4 MB).";
     } else {
       const bytes = new Uint8Array(await file.arrayBuffer());
       const type = detectFileType(bytes);

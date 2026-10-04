@@ -7,6 +7,7 @@ next-env.d.ts
 .env.local
 .env.*.local
 data/inquiries/
+.vercel
 npm-debug.log*
 
 # Raw source material supplied by the company (large; the PDF/screenshot contain registration details).

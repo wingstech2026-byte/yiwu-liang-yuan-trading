@@ -42,24 +42,33 @@ Products with `status: "placeholder"` show a "Placeholder listing" badge, are se
 ### Languages
 Copy a content folder (`src/content/en` → `src/content/fr`), translate by hand, register it in `src/content/index.ts`, and add the code to `locales` in `src/lib/site.ts`. For Arabic, also set `dir="rtl"` in `src/app/[locale]/layout.tsx`. The language selector already lists the planned languages as "coming soon".
 
+## Deploying to Vercel (recommended)
+
+1. Push this repository to GitHub (already done: https://github.com/wingstech2026-byte/yiwu-liang-yuan-trading).
+2. In Vercel: **Add New... > Project > Import** the repository. Framework preset is detected as Next.js; leave build settings as they are.
+3. Add **Environment Variables** before the first deploy (Settings > Environment Variables):
+   - `NEXT_PUBLIC_SITE_URL` = your public address, no trailing slash (e.g. `https://your-project.vercel.app` or your own domain)
+   - `RESEND_API_KEY`, `INQUIRY_TO_EMAIL`, and `INQUIRY_FROM_EMAIL` so inquiries reach you (see below)
+   - optional: `NEXT_PUBLIC_CRISP_WEBSITE_ID`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID`
+4. Click **Deploy**. Every push to `main` redeploys automatically. Add your own domain under Settings > Domains.
+
+Node 22 is selected through `engines` in `package.json`. Environment variables that start with `NEXT_PUBLIC_` are read at build time, so redeploy after changing them.
+
 ## Inquiries and the quote list
 
 Visitors can add products to a **quote list** (header icon, product cards, product pages) and send them together in one inquiry. The list is kept in the browser (localStorage) and is cleared after a successful submission.
 
-`POST /api/inquiry` validates and sanitises input, enforces a same-origin check, a honeypot field, a per-IP rate limit (5 per 15 minutes), and an upload allow-list (JPG/PNG/PDF, 5 MB, checked by file signature, stored under a random name).
+`POST /api/inquiry` validates and sanitises input, enforces a same-origin check, a honeypot field, a per-IP rate limit (5 per 15 minutes), and an upload allow-list (JPG/PNG/PDF, **4 MB**, checked by file signature). The 4 MB cap keeps requests under Vercel's ~4.5 MB body limit.
 
-**Where inquiries go** (`src/services/inquiry-store.ts`, `src/services/notify.ts`):
-1. **Saved** to Netlify Blobs when running on Netlify, or to `data/inquiries/inquiries.jsonl` (uploads in `data/inquiries/uploads/`) on a normal Node host. If the first fails, the other is tried.
-2. **Emailed** (optional): set `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` (and `INQUIRY_FROM_EMAIL` on a domain verified in Resend, see https://resend.com). The email includes the quote-list products and the attached reference file.
+**How inquiries are delivered** (`src/services/inquiry-store.ts`, `src/services/notify.ts`):
+1. **Email (required on Vercel):** set `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` (and `INQUIRY_FROM_EMAIL` on a domain verified in Resend, see https://resend.com). Each inquiry is emailed with the quote-list products and the attached reference file.
+2. **Local files (normal Node host or local dev):** inquiries are also appended to `data/inquiries/inquiries.jsonl` (uploads in `data/inquiries/uploads/`). View them with `npm run inquiries`. Vercel's filesystem is read-only, so this step simply fails there and email carries the inquiry.
 
-The form only shows "received" if the inquiry was really saved or really emailed; otherwise the visitor sees an error. If email fails but the save worked, the visitor still sees success and the inquiry is stored. Locally, view saved inquiries with `npm run inquiries`. On Netlify, the quickest way to receive them is the email option.
+The form only shows "received" if the inquiry was really saved or really emailed; otherwise the visitor sees an error. **On Vercel, without the email variables every submission fails with an error.** Set them before going live. Nothing else is stored on Vercel, so keep the emails (or add a database by implementing the `InquiryStore` interface).
 
-To use a database or another provider, implement the `InquiryStore` interface.
+The rate limiter is in memory, so on serverless hosting it only limits within one server instance. Use Vercel's firewall/rate-limit settings for stronger protection.
 
-Notes for deployment:
-- On a normal Node host, file storage needs a **persistent writable disk** (VPS, Render, Railway…); set `INQUIRY_DATA_DIR` to a persistent path and back it up.
-- Run behind a reverse proxy that sets `X-Forwarded-For` and keeps the original `Host` header (used for the same-origin check and rate limiting). The rate limiter is in memory, so it is per process.
-- Serve over HTTPS. Security headers (CSP, HSTS, X-Frame-Options, etc.) are set in `next.config.mjs` in production.
+Notes for a normal Node host (VPS, Render, Railway...): give it a persistent writable disk and set `INQUIRY_DATA_DIR`; run behind a reverse proxy that sets `X-Forwarded-For` and keeps the original `Host` header; serve over HTTPS. Security headers (CSP, HSTS, X-Frame-Options...) are set in `next.config.mjs` in production.
 
 ## Cookie banner
 
@@ -82,7 +91,7 @@ Disabled until you set `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_META_PIXEL_ID`. I
 Disabled until you set `NEXT_PUBLIC_CRISP_WEBSITE_ID`. Steps:
 1. Create a free account at https://crisp.chat and add your website.
 2. Copy the **Website ID** (a UUID such as `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`) from Settings > Website Settings > Setup instructions.
-3. Put it in `.env.local` (local), or in the Netlify environment variables (Site configuration > Environment variables), then redeploy.
+3. Put it in `.env.local` (local), or in the Vercel environment variables (Settings > Environment Variables), then redeploy.
 4. In Crisp, add your site domain under the website's trusted domains if asked.
 
 The widget loads lazily after the page, and the security headers in `next.config.mjs` only allow Crisp when a valid ID is set. The Privacy and Cookie pages already mention it.

@@ -1,3 +1,0 @@
-# Netlify build settings. Node 22 is required by @netlify/blobs (>= 22.12).
-[build.environment]
-  NODE_VERSION = "22"
